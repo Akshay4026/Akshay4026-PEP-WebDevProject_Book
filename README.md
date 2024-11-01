@@ -134,7 +134,7 @@ In the `script.js` file, there should be the `displaySingleBook` function that i
 
 
 
-### 5:  Our application’s search results should be sortable by rating.
+### 5:  Our app lication’s search results should be sortable by rating.
 
 
 
@@ -379,7 +379,7 @@ https://www.googleapis.com/books/v1/volumes?q=isbn:1781100500
 https://www.googleapis.com/books/v1/volumes?q=inauthor:Peter%20Loewer
 
 ```
-
+ 
 
 
 ### Limiting Search Results
@@ -399,3 +399,25 @@ https://www.googleapis.com/books/v1/volumes?q=harry%20potter&maxResults=5
 
 
 Good luck!
+
+
+
+Procedure :
+1.created a form having required elements .
+2.used handlesearch() function to get arrray of objects using aysnc and await .
+3.after extracting the books(contains array of objects ).passed this books to displaybooklist to display the data in the webpage .
+4.now to display the single book when clicked on it , used count to assing the id to each of the book while mapping them to books .
+5.no whenever the user clicks on the single book item it extracts the single book ID (unique).
+6.after extractin this we need to pass this single book data by itentifying it in the array using index numbers of array and sending it as a argument to displaysingleBook() function .
+7.Next operation is adding filter .here used ebook value to filter the books .
+8.in the handle search itself passed this books as arg to the eventListner function which i created additionally .
+9. used addeventlistener ("change") to track whether the checkbox is checked or not.
+10.here whenever the change occurs this function will send the books data filtered when checkbox.checked =true, and sends the regular bookslist whenn its value is false.
+11.last function is handling sort ,similar to the filter here aswell whwnever the button is clicked this function will send the data to the 
+handlesort() function .
+
+
+      Simply used displayBooksList() function by changing the books array of objects according to the users request .
+      example when fetch button is clicked we will be sending nomral books as arg to displagbooklist.
+      if user checks the ebook the books withnin books array which having ebook = "available" only this list will be sending to the displaylistbook()
+      similarly for the sort we will send sorted books array and sends to displayBookList function .

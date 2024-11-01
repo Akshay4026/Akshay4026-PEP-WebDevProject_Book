@@ -7,8 +7,46 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <h1 id="top-head">Book Searching API</h1>
+        <h2 id="second-head">Project-3</h2>
+    </header>
+    <main>
+        <section>
+            <form id="search-form">
+                <label for="seach-input"></label>
+                <input id="search-input" type="text" name="value" placeholder="Search Title,ISBN,Author">
+                <select id="search-type" name="type">
+                    <option value="title">Book Titile</option>
+                    <option value="isbn">ISBN</option>
+                    <option value="author">Author Name</option>
+                </select>
+    
+                <button id="search-button" >Fetch</button>
+    
+                <button id="sort-rating" >Sort by Rating</button>
+    
+                <label for="ebook-filter" >Ebook
+                <input type="checkbox" id="ebook-filter" >
+                </label>
+            </form>
+        </section>
+
+        <section>
+            <ul id="book-list"></ul>
+        </section>
+        <section>
+            <ul id="selected-book" style="display: none;"></ul>
+        </section>
+        <!-- <h3 id="back" style="display: none;" onclick="()">Click to go back</h3> -->
+    
+    </main>
     
     
+    <footer>
+        This is Project-3 webpage footer
+    </footer>
+   
     <script src="script.js"></script>
 </body>
 </html>

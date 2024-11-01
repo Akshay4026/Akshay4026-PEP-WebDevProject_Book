@@ -5,13 +5,18 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
+    background:linear-gradient(100deg,#0b0b0b,rgb(7, 87, 90));
 }
 
 header, footer {
-    background-color: #333;
     color: #fff;
     text-align: center;
     padding: 1rem;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background:linear-gradient(100deg,#0e0e0e,rgb(7, 87, 90));
 }
 
 main {
@@ -21,12 +26,15 @@ main {
 #search-form {
     gap: 1rem;
     margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
 }
 
 
 #filter-sort {
     justify-content: space-between;
     margin-bottom: 1rem;
+    
 }
 
 #book-list {
@@ -49,5 +57,119 @@ main {
     padding: 1rem;
     border-radius: 5px;
     margin-top: 1rem;
+}
+
+#top-head{
+    display: flex;
+    justify-content: center;
+    color: rgb(7, 87, 90);
+    background-color: black;
+    padding: 7px;
+}
+
+#second-head{
+    display: flex;
+    justify-content: center;
+    /* background: rgb(7, 87, 90); */
+}
+
+#search-input{
+    color: rgb(7, 87, 90);
+    padding: 10px;
+    border-radius: 50px;
+    font-weight: 40px;
+}
+
+#search-type{
+    color: rgb(7, 87, 90);
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 40px;
+}
+
+#search-button {
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 40px;
+    
+}
+button{
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 40px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+
+/* #ebook-filter{
+} */
+
+#book-list{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); 
+    grid-template-rows: repeat(3, 300px);
+    gap: 10px; 
+    padding: 12px;
+}
+
+#book-list > li{
+    color: #efe8e8;
+    font-weight:bold;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    text-transform: capitalize;
+    border: 1px solid #0b0b0b;
+    border-radius: 5px;
+    padding: 20px;
+    border: 1px solid #0b0b0b;
+    background-color:rgb(7, 87, 90) ;
+    cursor: pointer;
+}
+.cover-element{
+    height: 150px;
+    margin-left: 50px;
+    border-color: black;
+}
+#book-list>li>.rating-element{
+    margin-left: 20%;
+    position: relative;
+}
+#book-list >li>.isbn-element{
+    display: none;
+}
+#book-list >li>.published-element{
+    display: none;
+}
+#selected-book{
+    margin-left: 40%;
+    display: flex;
+    padding: 0;
+    color: #efe8e8;
+    font-weight:bold;
+    border-radius: 5px;
+    text-transform: capitalize;
+    padding: 20px;
+    border: 1px solid #0b0b0b;
+    background-color:rgb(7, 87, 90) ;
+    width: 300px;
+    height: 375px;
+    list-style-type: none; 
+}
+#selected-book >li> .cover-element{
+    margin: auto;
+}
+
+@media(max-width : 768px){
+    #book-list{
+    grid-template-columns: repeat(2,1fr);
+}
+}
+
+@media(max-width: 480px ){
+        #book-list{
+            grid-template-columns: repeat(1,1fr);
+        }
 }
 

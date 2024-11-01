@@ -26,8 +26,67 @@
  * Hint: Regarding steps 3 and 4, consider using the Array object's map() method and assign the above properties as keys. Extract the correct values from the JSON using dot notation. Print your results often for debugging!
  * 
  */
+
+
 async function searchBooks(query, type) {
+
+  const baseUrl = "https://www.googleapis.com/books/v1/volumes";
+
+  let queryUrl = ""
+
+    if(query){
+        if(type === "isbn"){
+          queryUrl = `q=isbn:${encodeURIComponent(query)}`;
+        }
+        else if(type==="title"){
+          queryUrl = `q=intitle:${encodeURIComponent(query)}`;
+        }
+        else if(type==="author"){
+          queryUrl = `q=inauthor:${encodeURIComponent(query)}`;
+        }
+      }
+      else{
+        alert('Enter input value');
+        return [];
+      }
+
+      const url =`${baseUrl}?${queryUrl}&maxResults=10`;
+      try {
+        const response =await fetch(url);
+          if(!response.ok){
+            throw new Error('Reponse was not ok');
+          }
+          else{
+              const data = await response.json();
+              const items = data.items|| [];
+
+              if(!items||items.length===0){
+                alert('No results of this query!!');
+                return [];
+              }
+               const result =  items.map(book =>{
+               const title = book.volumeInfo.title || "No title available";
+               const author = book.volumeInfo.authors ? book.volumeInfo.authors.join(",") : "No author available";
+               const ebook = book.saleInfo && book.saleInfo.isEbook? "Available" : "Not available";
+               const cover = book.volumeInfo.imageLinks ? book.volumeInfo.imageLinks.thumbnail : "No cover available";
+               const rating = book.volumeInfo.averageRating || 0;
+               const isbn = book.volumeInfo.industryIdentifiers?(book.volumeInfo.industryIdentifiers.find(id=>(id.type==="ISBN_13")||(id.type=="ISBN_10"))?.identifier||"NO ISBN"):"NO ISBN";
+               const published =book.volumeInfo.publishedDate||"NO author found!";
+               return {title,author,ebook,cover,rating,isbn,published};
+
+              });
+              return  result;
+              // console.log(result)
+          } 
+      } 
+      catch (error) {
+        console.error(error)
+        return [];
+      }
 }
+
+
+// searchBooks("poe","author")
 
 /**
 * Takes in a list of books and updates the UI accordingly.
@@ -53,9 +112,52 @@ async function searchBooks(query, type) {
 * 5. Ensures that the 'selected-book' element is not visible.
 */
 function displayBookList(books) {
-  
-}
+      
+      const mainList = document.getElementById("book-list")
+      mainList.innerHTML = ""
+      // const sortCheck = document.getElementById("sort-rating");
+      // sortCheck.style.display = "block";
+      let count = 0;
+      books.forEach(obj => {
+        count+=1;
+        const eachBook = document.createElement("li");
+        eachBook.id = `book-${count}`;
 
+          for(let key in obj){
+            // if(key ==="isbn"||key ==="publishedDate") continue;
+            const bookInfo = document.createElement("div");
+            bookInfo.className = `${key}-element`;
+            console.log(bookInfo.className)
+            if(key =="cover"){
+              const img = document.createElement("img");
+                img.src = obj[key];
+                img.alt = `${obj.title} cover image`;
+                img.className = "cover-element";
+                bookInfo.appendChild(img);
+            }
+            else if(key == "rating"){
+              bookInfo.textContent = `Rating: ${obj[key]}`;
+            }
+            else if(key =="ebook"){
+              bookInfo.textContent = `eBook Access: ${obj[key]}`;
+            }
+            else{
+            bookInfo.textContent = `${key}:${obj[key]}`;
+            }
+            eachBook.appendChild(bookInfo);
+          }
+          mainList.append(eachBook)
+          // console.log(books)
+      });
+
+      document.getElementById("book-list").addEventListener("click", (event) => {
+      const bookItem = event.target.closest("li")
+      const index = parseInt(bookItem.id.split('-')[1]) - 1;
+      const book = books[index]
+      displaySingleBook(book);
+      // console.log(book);
+      });
+}
 /**
  * Handles the search form submission and updates the UI with search results.
  * 
@@ -76,7 +178,29 @@ function displayBookList(books) {
  */
 async function handleSearch(event) {
 
+    event.preventDefault();
+
+    let type = document.getElementById("search-type").value;
+    let query = document.getElementById("search-input").value;
+    
+      if(!query){
+        alert('Enter values in the search');
+        return;
+      }
+    let books = await searchBooks(query,type);
+
+  eventListener(books);
+
+  handlesortbooks(books);
+    
+  displayBookList(books);
+
 }
+
+let button = document.getElementById("search-button");
+button.addEventListener("click", handleSearch);
+
+
 
 
 /**
@@ -105,8 +229,36 @@ async function handleSearch(event) {
  * 
  */
 function displaySingleBook(book) {
+  
 
+  const mainList = document.getElementById("book-list");
+  mainList.innerHTML = "";
+  mainList.style.display = "none";
+  const bookItem = document.getElementById("selected-book");
+  bookItem.style.display = "block";
+  
+
+  for(let key in book){
+    const bookData = document.createElement("li");
+    if(key ==="cover"){
+      const img = document.createElement("img");
+      img.src = book[key];
+      img.className = "cover-element";
+      img.alt = `${book.title} cover image`;
+      bookData.appendChild(img);
+    }
+    else{
+    bookData.textContent = `${key}:${book[key]}`;
+    bookData.className = `${key}-element`;
+    }
+    bookItem.appendChild(bookData);
+  }
 }
+  // bookItem.innerHTML = book;
+  // const selectedList = document.getElementById("selected-list");
+  // selectedList.innerHTML = "";
+  // // const bookInfo = document.createElement("li");
+  
 
 /**
  * Filters the displayed book list to show only e-books when the checkbox is checked.
@@ -123,9 +275,39 @@ function displaySingleBook(book) {
  *    - Displays the full list of search results without filtering.
  * 
  */
-function handleFilter() {
-
+function handleFilter(books,ischecked) {
+  let emptbook = {
+    Ebook :"No ebooks found!"
+  };
+  let filteredBooks = [];
+  if(ischecked){
+      books.forEach(obj=>{
+        if(obj["ebook"]=="Available"){
+         filteredBooks.push(obj);
+        }
+     });
+     if(filteredBooks.length>0){
+      displayBookList(filteredBooks) ;
+     }
+     else{
+      displayBookList([emptbook]);
+     }
+  }
+  else{
+  displayBookList(books);
+  }
 }
+
+function eventListener(books){
+  let checkbox = document.getElementById("ebook-filter");
+  checkbox.addEventListener("change",()=>{
+      let ischecked = checkbox.checked?true:false;
+      handleFilter(books,ischecked);
+ })
+ 
+}
+
+
 
 /**
  * Sorts the displayed book list by rating in descending order when the button is clicked.
@@ -141,6 +323,19 @@ function handleFilter() {
  * 3. Updates the displayed book list with the sorted results.
  * 
  */
-function handleSort() {
-
+function handleSort(books) {
+ 
+  let sortedBooks  = books.sort((a,b)=>(b.rating||0)-(a.rating||0));
+  console.log(sortedBooks.length);
+  displayBookList(sortedBooks);
 }
+
+
+function handlesortbooks(books){
+    
+  document.getElementById("sort-rating").addEventListener("click", function(event) {
+    event.preventDefault(); 
+    handleSort(books);
+  });
+}
+
